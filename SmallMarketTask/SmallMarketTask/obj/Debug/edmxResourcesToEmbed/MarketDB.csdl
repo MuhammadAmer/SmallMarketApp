@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Models" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Items" Relationship="Self.FK_Items_Category" FromRole="Category" ToRole="Items" />
+  </EntityType>
+  <EntityType Name="CustomersSupplier">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IsCustomer" Type="Boolean" />
+    <Property Name="DiscountPurchasing" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="DiscountSelling" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="PurchaseSellInvoices" Relationship="Self.FK_PurchaseSellInvoice_CustomersSuppliers" FromRole="CustomersSuppliers" ToRole="PurchaseSellInvoice" />
+  </EntityType>
+  <EntityType Name="Item">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CategoryId" Type="Int32" />
+    <Property Name="PurchasePrice" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="SellPrice" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="UnitId" Type="Int32" />
+    <Property Name="ValidQuantity" Type="Int32" />
+    <NavigationProperty Name="Category" Relationship="Self.FK_Items_Category" FromRole="Items" ToRole="Category" />
+    <NavigationProperty Name="Unit" Relationship="Self.FK_Items_Unit" FromRole="Items" ToRole="Unit" />
+    <NavigationProperty Name="PurchaseSellInvoceDetails" Relationship="Self.FK_PurchaseSellInvoceDetails_Items" FromRole="Items" ToRole="PurchaseSellInvoceDetails" />
+  </EntityType>
+  <EntityType Name="PurchaseSellInvoceDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PurchaseSellInvoiceId" Type="Int32" />
+    <Property Name="ItemId" Type="Int32" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="Price" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="TotalPrice" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="TotalDiscount" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="Item" Relationship="Self.FK_PurchaseSellInvoceDetails_Items" FromRole="PurchaseSellInvoceDetails" ToRole="Items" />
+    <NavigationProperty Name="PurchaseSellInvoice" Relationship="Self.FK_PurchaseSellInvoceDetails_PurchaseSellInvoice" FromRole="PurchaseSellInvoceDetails" ToRole="PurchaseSellInvoice" />
+  </EntityType>
+  <EntityType Name="PurchaseSellInvoice">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Date" Type="DateTime" Precision="3" />
+    <Property Name="CustomerSupplierId" Type="Int32" />
+    <Property Name="TotalPrice" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="TotalDiscount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="IsPurchase" Type="Boolean" />
+    <NavigationProperty Name="CustomersSupplier" Relationship="Self.FK_PurchaseSellInvoice_CustomersSuppliers" FromRole="PurchaseSellInvoice" ToRole="CustomersSuppliers" />
+    <NavigationProperty Name="PurchaseSellInvoceDetails" Relationship="Self.FK_PurchaseSellInvoceDetails_PurchaseSellInvoice" FromRole="PurchaseSellInvoice" ToRole="PurchaseSellInvoceDetails" />
+  </EntityType>
+  <EntityType Name="Unit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Items" Relationship="Self.FK_Items_Unit" FromRole="Unit" ToRole="Items" />
+  </EntityType>
+  <Association Name="FK_Items_Category">
+    <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+    <End Role="Items" Type="Self.Item" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Items">
+        <PropertyRef Name="CategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PurchaseSellInvoice_CustomersSuppliers">
+    <End Role="CustomersSuppliers" Type="Self.CustomersSupplier" Multiplicity="0..1" />
+    <End Role="PurchaseSellInvoice" Type="Self.PurchaseSellInvoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CustomersSuppliers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PurchaseSellInvoice">
+        <PropertyRef Name="CustomerSupplierId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Items_Unit">
+    <End Role="Unit" Type="Self.Unit" Multiplicity="0..1" />
+    <End Role="Items" Type="Self.Item" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Unit">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Items">
+        <PropertyRef Name="UnitId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PurchaseSellInvoceDetails_Items">
+    <End Role="Items" Type="Self.Item" Multiplicity="0..1" />
+    <End Role="PurchaseSellInvoceDetails" Type="Self.PurchaseSellInvoceDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Items">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PurchaseSellInvoceDetails">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PurchaseSellInvoceDetails_PurchaseSellInvoice">
+    <End Role="PurchaseSellInvoice" Type="Self.PurchaseSellInvoice" Multiplicity="0..1" />
+    <End Role="PurchaseSellInvoceDetails" Type="Self.PurchaseSellInvoceDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PurchaseSellInvoice">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PurchaseSellInvoceDetails">
+        <PropertyRef Name="PurchaseSellInvoiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="SmallMarketDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Categories" EntityType="Self.Category" />
+    <EntitySet Name="CustomersSuppliers" EntityType="Self.CustomersSupplier" />
+    <EntitySet Name="Items" EntityType="Self.Item" />
+    <EntitySet Name="PurchaseSellInvoceDetails" EntityType="Self.PurchaseSellInvoceDetail" />
+    <EntitySet Name="PurchaseSellInvoices" EntityType="Self.PurchaseSellInvoice" />
+    <EntitySet Name="Units" EntityType="Self.Unit" />
+    <AssociationSet Name="FK_Items_Category" Association="Self.FK_Items_Category">
+      <End Role="Category" EntitySet="Categories" />
+      <End Role="Items" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PurchaseSellInvoice_CustomersSuppliers" Association="Self.FK_PurchaseSellInvoice_CustomersSuppliers">
+      <End Role="CustomersSuppliers" EntitySet="CustomersSuppliers" />
+      <End Role="PurchaseSellInvoice" EntitySet="PurchaseSellInvoices" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Items_Unit" Association="Self.FK_Items_Unit">
+      <End Role="Unit" EntitySet="Units" />
+      <End Role="Items" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PurchaseSellInvoceDetails_Items" Association="Self.FK_PurchaseSellInvoceDetails_Items">
+      <End Role="Items" EntitySet="Items" />
+      <End Role="PurchaseSellInvoceDetails" EntitySet="PurchaseSellInvoceDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PurchaseSellInvoceDetails_PurchaseSellInvoice" Association="Self.FK_PurchaseSellInvoceDetails_PurchaseSellInvoice">
+      <End Role="PurchaseSellInvoice" EntitySet="PurchaseSellInvoices" />
+      <End Role="PurchaseSellInvoceDetails" EntitySet="PurchaseSellInvoceDetails" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

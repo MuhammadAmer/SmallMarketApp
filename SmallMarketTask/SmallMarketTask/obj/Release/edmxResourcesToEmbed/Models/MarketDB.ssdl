@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Models.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="CustomersSuppliers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Phone" Type="varchar" MaxLength="50" />
+    <Property Name="TypeId" Type="int" />
+    <Property Name="DiscountPurchasing" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="DiscountSelling" Type="decimal" Precision="18" Scale="2" />
+  </EntityType>
+  <EntityType Name="CustomerSuppliertype">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Items">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="CategoryId" Type="int" />
+    <Property Name="PurchasePrice" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="SellPrice" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="UnitId" Type="int" />
+    <Property Name="ValidQuantity" Type="int" />
+  </EntityType>
+  <EntityType Name="PurchaseSellInvoceDetails">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PurchaseSellInvoiceId" Type="int" />
+    <Property Name="ItemId" Type="int" />
+    <Property Name="Quantity" Type="int" />
+    <Property Name="Price" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="TotalPrice" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="TotalDiscount" Type="decimal" Precision="18" Scale="2" />
+  </EntityType>
+  <EntityType Name="PurchaseSellInvoice">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Date" Type="datetime" />
+    <Property Name="CustomerSupplierId" Type="int" />
+    <Property Name="IsPurchase" Type="bit" />
+    <Property Name="OrderNo" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Unit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+  </EntityType>
+  <Association Name="FK_CustomersSuppliers_CustomerSuppliertype">
+    <End Role="CustomerSuppliertype" Type="Self.CustomerSuppliertype" Multiplicity="0..1" />
+    <End Role="CustomersSuppliers" Type="Self.CustomersSuppliers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CustomerSuppliertype">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CustomersSuppliers">
+        <PropertyRef Name="TypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Items_Category">
+    <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+    <End Role="Items" Type="Self.Items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Items">
+        <PropertyRef Name="CategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Items_Unit">
+    <End Role="Unit" Type="Self.Unit" Multiplicity="0..1" />
+    <End Role="Items" Type="Self.Items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Unit">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Items">
+        <PropertyRef Name="UnitId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PurchaseSellInvoceDetails_Items">
+    <End Role="Items" Type="Self.Items" Multiplicity="0..1" />
+    <End Role="PurchaseSellInvoceDetails" Type="Self.PurchaseSellInvoceDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Items">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PurchaseSellInvoceDetails">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PurchaseSellInvoceDetails_PurchaseSellInvoice">
+    <End Role="PurchaseSellInvoice" Type="Self.PurchaseSellInvoice" Multiplicity="0..1" />
+    <End Role="PurchaseSellInvoceDetails" Type="Self.PurchaseSellInvoceDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PurchaseSellInvoice">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PurchaseSellInvoceDetails">
+        <PropertyRef Name="PurchaseSellInvoiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PurchaseSellInvoice_CustomersSuppliers">
+    <End Role="CustomersSuppliers" Type="Self.CustomersSuppliers" Multiplicity="0..1" />
+    <End Role="PurchaseSellInvoice" Type="Self.PurchaseSellInvoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CustomersSuppliers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PurchaseSellInvoice">
+        <PropertyRef Name="CustomerSupplierId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ModelsStoreContainer">
+    <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CustomersSuppliers" EntityType="Self.CustomersSuppliers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CustomerSuppliertype" EntityType="Self.CustomerSuppliertype" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Items" EntityType="Self.Items" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PurchaseSellInvoceDetails" EntityType="Self.PurchaseSellInvoceDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PurchaseSellInvoice" EntityType="Self.PurchaseSellInvoice" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Unit" EntityType="Self.Unit" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_CustomersSuppliers_CustomerSuppliertype" Association="Self.FK_CustomersSuppliers_CustomerSuppliertype">
+      <End Role="CustomerSuppliertype" EntitySet="CustomerSuppliertype" />
+      <End Role="CustomersSuppliers" EntitySet="CustomersSuppliers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Items_Category" Association="Self.FK_Items_Category">
+      <End Role="Category" EntitySet="Category" />
+      <End Role="Items" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Items_Unit" Association="Self.FK_Items_Unit">
+      <End Role="Unit" EntitySet="Unit" />
+      <End Role="Items" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PurchaseSellInvoceDetails_Items" Association="Self.FK_PurchaseSellInvoceDetails_Items">
+      <End Role="Items" EntitySet="Items" />
+      <End Role="PurchaseSellInvoceDetails" EntitySet="PurchaseSellInvoceDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PurchaseSellInvoceDetails_PurchaseSellInvoice" Association="Self.FK_PurchaseSellInvoceDetails_PurchaseSellInvoice">
+      <End Role="PurchaseSellInvoice" EntitySet="PurchaseSellInvoice" />
+      <End Role="PurchaseSellInvoceDetails" EntitySet="PurchaseSellInvoceDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PurchaseSellInvoice_CustomersSuppliers" Association="Self.FK_PurchaseSellInvoice_CustomersSuppliers">
+      <End Role="CustomersSuppliers" EntitySet="CustomersSuppliers" />
+      <End Role="PurchaseSellInvoice" EntitySet="PurchaseSellInvoice" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

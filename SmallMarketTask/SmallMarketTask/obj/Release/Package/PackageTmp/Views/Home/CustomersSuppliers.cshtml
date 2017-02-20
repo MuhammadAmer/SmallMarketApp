@@ -1,0 +1,107 @@
+﻿@{
+    ViewBag.Title = "CustomersSuppliers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/App/CustomersSuppliers/CusSupController.js"></script>
+<script src="~/Scripts/App/CustomersSuppliers/CusSupService.js"></script>
+<body>
+  <div ng-controller="customersSuppliersCtrl">
+<div class="col-lg-2">
+        <button ng-click="addCustomerSupplier()"  class="btn  btn-info btn-lg">
+            <i class="glyphicon glyphicon-plus"></i> Add New
+        </button>
+    </div>
+<br />
+  <form class="navbar-form" role="search">
+    <div class="input-group add-on">
+      <input class="form-control" placeholder="Search"  id="srch-term" ng-model="searchText" type="text">
+      <div class="input-group-btn">
+        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+      </div>
+    </div>
+  </form>
+   
+<table class="table table-bordered ">
+
+    <thead style="background-color:lightblue;">
+        <tr>
+            <th>Name</th>
+             <th>Phone</th>
+             <th>Type</th>
+             <th>Purchasing Discount</th>
+             <th> Selling Discount</th>
+         </tr>
+    </thead>
+    
+    <tbody>
+           <tr dir-paginate="customersupplier in customerssuppliers|orderBy:desc| filter:searchText |itemsPerPage:5">
+              
+             <td>{{customersupplier.Name}}</td>
+             <td>{{customersupplier.Phone}}</td>
+             <td >{{customersupplier.TypeName}}</td>
+             <td>{{customersupplier.DiscountPurchasing}}</td>
+              <td>{{customersupplier.DiscountSelling}}</td>
+        </tr>
+                
+    </tbody>
+</table>
+     <dir-pagination-controls max-size="5"  direction-links="true" boundary-links="true" > </dir-pagination-controls>
+
+     <script type="text/ng-template" id="myModalContent.html">
+         <div class="modal-content">
+          <form name="itemForm" class="form-group" >
+        <div class="modal-header">
+            <button type="button" 
+                    class="close" 
+                    ng-click="cancel()"
+                    data-dismiss="modal" 
+                    aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h3 class="text-info">{{headerTitle}}</h3>
+         </div>
+        <div class="modal-body"> 
+        
+        <tr>
+            <td><b> Name</b></td>
+            <td><input id="name" type="text" class="form-control"  ng-model="customersupplier.Name" ng-required="true"/></td>
+           
+        </tr>
+         <br />
+         <tr>
+            <td><b> Phone</b></td>
+            <td><input id="name" type="text" class="form-control"  ng-model="customersupplier.Phone" ng-required="true"/></td>
+           
+        </tr>
+         <br />
+        <tr>
+            <td> <b>Type</b></td>
+            <td>
+            <select ng-model="customersupplier.TypeId"  ng-required="true" class="form-control" ng-options="ty.Id as ty.Name for ty in types"> 
+           <option value="">--Select Category--</option>
+         </select>
+            </td>
+        </tr>
+          <br />
+         <tr>
+            <td> <b>Purchasing Discount</b></td>
+            <td><input id="purchase" type="text" class="form-control" ng-model="customersupplier.DiscountPurchasing"  ng-required="true"/></td>
+        </tr>
+          <br />
+         <tr>
+            <td> <b>Selling Discount</b></td>
+            <td><input id="sellprice" type="text" class="form-control" ng-model="customersupplier.DiscountSelling"  ng-required="true"/></td>
+           
+        </tr>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" type="button" ng-click="save()"  ng-disabled="itemForm.$invalid">Save</button>
+            <button class="btn btn-warning" type="button"  ng-click="cancel()">Cancel</button>
+        </div>
+         </div>
+          </form>
+        </div>
+    </script>
+    </div>
+     
+
+</body>

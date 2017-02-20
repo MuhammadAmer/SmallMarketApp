@@ -1,0 +1,1 @@
+﻿var marketapp = angular.module("marketapp", ["angularUtils.directives.dirPagination", "ui.bootstrap", "ngRoute"]);

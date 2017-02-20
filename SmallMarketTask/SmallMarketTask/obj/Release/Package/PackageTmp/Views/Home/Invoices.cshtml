@@ -1,0 +1,131 @@
+﻿@{
+    ViewBag.Title = "Invoices";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/App/Invoices/InvoiceController.js"></script>
+<script src="~/Scripts/App/Invoices/InvoiceService.js"></script>
+
+ <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#txtDate").datepicker();
+    });
+</script>
+    <body>
+     <div ng-controller="invoiceCtrl">
+         
+    <div class="container" id="form1">
+    <div class="master"  >
+         <h4>Master</h4>
+        <table class="table table-bordered">
+            <tr>
+                <td style="max-width:150px">
+                  <h5> Serial NO</h5>
+                   <input type="text" ng-model="item.OrderNo" class="form-control" />
+                </td>
+                <td>
+               <h5>Date</h5>  
+              <input id="txtDate" type="text" class="form-control" ng-model="item.Date"/>
+                </td>
+                 
+                <td>
+                   <h5>Customer / Supplier</h5>  
+                    
+                  <select ng-model="item.CustomerSupplierId" class="form-control" ng-required="true" ng-options="cus.Id as cus.Name for cus in customerssuppliers"> 
+                  <option value="">-- Select  --</option>
+                  </select>
+                
+                </td>
+                 
+                <td>
+                  <h5>Is Purchase</h5>  
+                 <input type="radio" name="radio1" ng-model="item.IsPurchase" class="radio" value="true">
+                </td>
+                 
+            </tr>
+            
+        </table>
+            <h4>Invoice Details</h4>
+            <table class="table table-bordered">
+                <tr>
+                    <td>Item Name</td>
+                    <td>Quantity</td>
+                    <td>Price</td>
+                    <td>Discount</td>
+                </tr>
+                <tr>
+                    <td>
+                  <select ng-model="item.ItemId" class="form-control" ng-required="true" ng-options="cat.Id as cat.Name for cat in products"> 
+                  <option value="">-- Select Item --</option>
+                  </select>
+                 </td>
+                    
+                    <td>
+                         <input name="Quantity" ng-model="item.Quantity" type="text" class="form-control" />
+                        <span class="error"></span>
+                    </td>
+                    <td>
+                      <input name="Price" ng-model="item.Price" type="text" class="form-control" />
+                        <span class="error"></span>
+                    </td>
+                    <td>
+                         <input name="Discount" ng-model="item.TotalDiscount"" type="text" class="form-control" />
+                        <span class="error"></span>
+                    </td>
+                   
+                    <td>
+                       <button class="btn btn-primary" ng-click="add(item)">Add</button>
+                        
+                    </td>
+
+                       
+                </tr>
+            </table>
+        
+        <table class="table table-bordered" ng-show="addItems">
+      <thead style="background-color:lightgreen;">
+        <tr>
+            <th>Item</th>
+           <th> Quantity</th>
+           <th> Price</th>
+           <th> Discount</th>
+           <th> Total Price</th>
+           <th>&nbsp</th>
+        </tr>
+    </thead>
+    
+    <tbody>
+           <tr ng-repeat="item in items">
+            <td>{{item.ItemId}} </td>
+             <td>{{item.Quantity}}</td>
+             <td>{{item.Price | number:2 | currency:'L.E'}}</td>
+             <td>{{item.TotalDiscount |number:2 | currency:'L.E'}}</td>
+            <td ng-model="item.TotalPrice">{{ item.Price * item.TotalDiscount * item.Quantity | number:2 }}</td>
+           <td>
+                <button ng-click="removeItem(item)" class="btn btn-danger"> 
+                <span class="glyphicon glyphicon-remove"></span> </button>
+           </td>
+        </tr>
+                
+    </tbody>
+         
+</table>
+                
+     <button ng-click="cancel()" class="btn btn-warning" >Cancel</button>
+     <button ng-click="save()" class="btn btn-success" >Save</button>
+                
+              
+    </div>
+    </div>
+   </div>
+   </body>
+
+  
+  <style>
+      #form1 {
+          background-color: Window;
+          text-align: left;
+          
+      }
+  </style>
+
